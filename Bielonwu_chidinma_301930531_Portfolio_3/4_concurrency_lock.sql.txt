@@ -1,0 +1,9 @@
+4. CONCURRENCY (LOCKING)
+
+4. CONCURRENCY 
+
+-- Portfolio 3: Concurrency Control - Row Locking
+-- Student: Bielonwu Chidinma - 301930531
+BEGIN;
+SELECT * FROM orders WHERE id = 1 FOR UPDATE;
+COMMIT;

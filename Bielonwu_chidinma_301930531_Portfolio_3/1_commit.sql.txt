@@ -1,0 +1,9 @@
+1. COMMIT
+
+-- Portfolio 3: COMMIT Example - Successful Order
+-- Student: Bielonwu Chidinma - 301930531
+-- Case Study : Shop Didi E-commerce platform
+BEGIN;
+INSERT INTO orders (user_id, product_id) VALUES (530, 234);
+COMMIT;
+

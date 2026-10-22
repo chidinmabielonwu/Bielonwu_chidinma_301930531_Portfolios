@@ -1,0 +1,8 @@
+3. ISOLATION 
+
+-- Portfolio 3: Isolation Level Example - READ COMMITTED
+-- Student: Bielonwu Chidinma - 301930531
+SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
+BEGIN;
+SELECT * FROM orders WHERE user_id = 530;
+COMMIT;

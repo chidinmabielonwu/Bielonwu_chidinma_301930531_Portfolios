@@ -1,0 +1,7 @@
+2. ROLLBACK
+
+-- Portfolio 3: ROLLBACK Example - Failed Payment
+-- Student: Bielonwu Chidinma - 301930531
+BEGIN;
+INSERT INTO orders (user_id, product_id) VALUES (999, 888);
+ROLLBACK;
