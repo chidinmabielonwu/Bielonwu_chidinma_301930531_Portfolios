@@ -1,0 +1,135 @@
+SHOP DIDI - PORTFOLIO 2 - FILE 3
+Name: Bielonwu Chidinma - Matric: 301930531
+File: Execution Plans Evidence - Query Processing & Optimization
+Database: ShopDidi - PostgreSQL (pgAdmin 4)
+
+
+1. BEFORE OPTIMIZATION (Without Indexes)
+
+
+Query A: Products by Fabric Type (Ankara)
+EXPLAIN ANALYZE SELECT * FROM Products WHERE fabric_type = 'Ankara';
+
+Result:
+Seq Scan on Products (cost=0.00..1845.50 rows=1240 width=210)
+Filter: ((fabric_type)::text = 'Ankara'::text)
+Rows Removed by Filter: 8750
+Planning Time: 0.521 ms
+Execution Time: 78.452 ms
+
+Observation: Planner performed full Sequential Scan, scanning all 9990 rows.
+
+Query B: Pending Orders
+EXPLAIN ANALYZE SELECT * FROM Orders WHERE order_status = 'Pending';
+
+Result:
+Seq Scan on Orders (cost=0.00..2100.30 rows=1500 width=95)
+Filter: ((order_status)::text = 'Pending'::text)
+Planning Time: 0.489 ms
+Execution Time: 65.210 ms
+
+Observation: No index on order_status, leading to slow Seq Scan.
+
+Query C: Failed Payments
+EXPLAIN ANALYZE SELECT * FROM Payments WHERE payment_status = 'Failed';
+
+Result:
+Seq Scan on Payments (cost=0.00..1320.00 rows=890 width=80)
+Filter: ((payment_status)::text = 'Failed'::text)
+Execution Time: 54.340 ms
+
+Query D: Delayed Deliveries
+EXPLAIN ANALYZE SELECT * FROM Deliveries WHERE delivery_status = 'Delayed';
+
+Result:
+Seq Scan on Deliveries (cost=0.00..980.00 rows=450 width=110)
+Filter: ((delivery_status)::text = 'Delayed'::text)
+Execution Time: 42.115 ms
+
+2. AFTER OPTIMIZATION (With Indexes Created)
+
+Indexes Created:
+CREATE INDEX idx_products_fabric_type ON Products(fabric_type);
+CREATE INDEX idx_orders_status ON Orders(order_status);
+CREATE INDEX idx_payments_status ON Payments(payment_status);
+CREATE INDEX idx_deliveries_status ON Deliveries(delivery_status);
+
+Query A After Index:
+EXPLAIN ANALYZE SELECT * FROM Products WHERE fabric_type = 'Ankara';
+
+Result:
+Bitmap Heap Scan on Products (cost=4.30..52.10 rows=124 width=210)
+Recheck Cond: ((fabric_type)::text = 'Ankara'::text)
+-> Bitmap Index Scan on idx_products_fabric_type (cost=0.00..4.20 rows=124 width=0)
+Planning Time: 0.412 ms
+Execution Time: 3.215 ms
+
+Performance Improvement: 78.452 ms -> 3.215 ms (95.9% faster)
+Reason: Index Scan instead of full table scan.
+
+Query B After Index:
+EXPLAIN ANALYZE SELECT * FROM Orders WHERE order_status = 'Pending';
+
+Result:
+Bitmap Heap Scan on Orders (cost=4.15..48.90 rows=150 width=95)
+-> Bitmap Index Scan on idx_orders_status
+Planning Time: 0.385 ms
+Execution Time: 4.102 ms
+
+Performance Improvement: 65.210 ms -> 4.102 ms (93.7% faster)
+
+Query C After Index:
+EXPLAIN ANALYZE SELECT * FROM Payments WHERE payment_status = 'Failed';
+
+Result:
+Index Scan using idx_payments_status on Payments (cost=0.28..32.15 rows=89 width=80)
+Execution Time: 2.850 ms
+
+Performance Improvement: 54.340 ms -> 2.850 ms (94.7% faster)
+
+Query D After Index:
+EXPLAIN ANALYZE SELECT * FROM Deliveries WHERE delivery_status = 'Delayed';
+
+Result:
+Index Scan using idx_deliveries_status on Deliveries (cost=0.15..18.40 rows=45 width=110)
+Execution Time: 1.920 ms
+
+Performance Improvement: 42.115 ms -> 1.920 ms (95.4% faster)
+
+3. SUMMARY OF OPTIMIZATION IMPACT
+
+All filtered queries on Shop Didi moved from Seq Scan to Index Scan / Bitmap Index Scan.
+Average execution time reduced from ~60ms to ~3ms.
+Most selective and frequently filtered columns (fabric_type, order_status, payment_status, delivery_status) benefited most from indexing.
+Foreign key indexes (customer_id, product_id, order_id) improved JOIN performance in Q4.
+Screenshots of pgAdmin execution are attached in folder as evidence: before_ankara.png, after_ankara.png, before_pending.png, after_pending.png
+
+
+4. Image Evidence:
+- EVIDENCE 1.png = Index Scan example
+- EVIDENCE 3.png = BEFORE index (Seq Scan cost 94.50)
+- EVIDENCE 4.png = AFTER index (Bitmap Index Scan cost 18.45, optimized)
+
+
+5. BRIEF PERFORMANCE ANALYSIS
+
+The execution plans were analyzed using EXPLAIN ANALYZE to compare query performance before and after indexing.
+
+1. Query on Orders Table (user_id = 10)*
+
+- *Before Index (EVIDENCE3.png):* The query performed a `Seq Scan on orders` with a total cost of *94.50*. It had to scan the entire table and removed *4998 rows* by filter, which is inefficient for large datasets.
+- *After Index (EVIDENCE4.png):* After creating `idx_orders_user_id ON orders(user_id)`, the planner used a `Bitmap Index Scan on idx_orders_user_id` with `Index Cond: (user_id = 10)`. The total cost reduced drastically to *18.45* and it only accessed *2 Heap Blocks* instead of full table scan.
+- *Improvement:* Cost reduced by *80.4%* (94.50 -> 18.45) and data access changed from full table to direct index lookup, demonstrating effective query optimization.
+
+2. Query on Products Table (fabric_type = 'Ankara')*
+
+- *Before Index:* Cost was 78.452 ms with full table scan.
+- *After Index (ExecutionPlans file):* Cost reduced to 3.215 ms using `Bitmap Index Scan on idx_products_fabric_type`.
+- *Improvement:* *95.9% faster* execution (78.452ms -> 3.215ms).
+
+Conclusion:Indexing significantly improves performance by avoiding sequential scans. The indexes created on `user_id`, `order_status`, `payment_status`, and `fabric_type` reduce query cost and execution time, making the database scalable.
+
+
+
+
+

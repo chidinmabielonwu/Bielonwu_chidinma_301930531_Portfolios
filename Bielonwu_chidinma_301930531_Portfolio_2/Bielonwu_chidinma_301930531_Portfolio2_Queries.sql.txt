@@ -1,0 +1,108 @@
+-- =========================================================
+-- SHOP DIDI - PORTFOLIO 2 - FILE 1
+-- Name: Bielonwu Chidinma - Matric: 301930531
+-- Case Study: Shop Didi Luxury Fashion E-commerce
+-- =========================================================
+
+-- Q1: Retrieve all pending orders with customer names
+-- Tables: Customers, Orders | Concept: JOIN + WHERE
+SELECT
+c.full_name,
+c.phone_number,
+o.order_id,
+o.order_date,
+o.total_amount,
+o.order_status
+FROM Customers c
+JOIN Orders o ON c.customer_id = o.customer_id
+WHERE o.order_status = 'Pending'
+ORDER BY o.order_date DESC;
+
+-- Q2: Search for products by fabric type (Ankara - most popular in Shop Didi)
+-- Table: Products | Concept: WHERE filtering
+SELECT
+product_name,
+category_id,
+fabric_type,
+price,
+stock_qty
+FROM Products
+WHERE fabric_type = 'Ankara';
+
+-- Q3: Alert for low stock custom-made outfits
+-- Table: Products | Concept: WHERE + AND (composite condition)
+SELECT
+product_name,
+size,
+is_custom,
+stock_qty
+FROM Products
+WHERE is_custom = TRUE
+AND stock_qty < 5;
+
+-- Q4: Calculate total sales per designer and brand (MOST IMPORTANT FOR CA)
+-- Tables: Designers, Products, Order_Items, Orders | Concept: 4-table JOIN + GROUP BY + Aggregation
+SELECT
+d.designer_name,
+d.brand_name,
+COUNT(DISTINCT o.order_id) AS total_orders,
+SUM(o.total_amount) AS total_sales
+FROM Designers d
+JOIN Products p ON d.designer_id = p.designer_id
+JOIN Order_Items oi ON p.product_id = oi.product_id
+JOIN Orders o ON oi.order_id = o.order_id
+WHERE o.order_status = 'Delivered'
+GROUP BY d.designer_name, d.brand_name
+ORDER BY total_sales DESC;
+
+-- Q5: Track all failed payments
+-- Tables: Orders, Payments | Concept: JOIN + WHERE
+SELECT
+o.order_id,
+c.full_name,
+p.payment_method,
+p.payment_amount,
+p.payment_status,
+p.payment_date
+FROM Orders o
+JOIN Payments p ON o.order_id = p.order_id
+JOIN Customers c ON o.customer_id = c.customer_id
+WHERE p.payment_status = 'Failed';
+
+-- Q6: Find top-rated products with average rating >= 4.5
+-- Tables: Products, Reviews | Concept: JOIN + GROUP BY + HAVING + AVG
+SELECT
+p.product_name,
+COUNT(r.review_id) AS total_reviews,
+ROUND(AVG(r.rating), 2) AS avg_rating
+FROM Products p
+JOIN Reviews r ON p.product_id = r.product_id
+GROUP BY p.product_name
+HAVING AVG(r.rating) >= 4.5
+ORDER BY avg_rating DESC;
+
+-- Q7: Find delayed deliveries with customer details
+-- Tables: Deliveries, Orders, Customers | Concept: 3-table JOIN + WHERE
+SELECT
+d.delivery_id,
+c.full_name,
+c.email,
+d.delivery_address,
+d.delivery_status,
+d.estimated_delivery_date
+FROM Deliveries d
+JOIN Orders o ON d.order_id = o.order_id
+JOIN Customers c ON o.customer_id = c.customer_id
+WHERE d.delivery_status = 'Delayed';
+
+-- Q8: Show performance of each category (how many times ordered)
+-- Tables: Categories, Products, Order_Items | Concept: JOIN + GROUP BY + COUNT
+SELECT
+cat.category_name,
+COUNT(oi.order_item_id) AS times_ordered,
+SUM(oi.quantity * oi.unit_price) AS revenue_generated
+FROM Categories cat
+JOIN Products p ON cat.category_id = p.category_id
+JOIN Order_Items oi ON p.product_id = oi.product_id
+GROUP BY cat.category_name
+ORDER BY times_ordered DESC;

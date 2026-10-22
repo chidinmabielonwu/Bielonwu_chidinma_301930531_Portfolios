@@ -1,0 +1,67 @@
+- =========================================================
+-- SHOP DIDI - PORTFOLIO 2 - FILE 2
+-- Name: Bielonwu Chidinma - Matric: 301930531
+-- File: Optimization (Indexing Strategy)
+-- =========================================================
+
+-- ---------------------------------------------------------
+-- PART A: EVIDENCE OF BEFORE - Run these BEFORE creating indexes
+-- Copy these and run in pgAdmin with EXPLAIN ANALYZE
+-- ---------------------------------------------------------
+-- EXPLAIN ANALYZE SELECT * FROM Products WHERE fabric_type = 'Ankara';
+-- EXPLAIN ANALYZE SELECT * FROM Orders WHERE order_status = 'Pending';
+-- EXPLAIN ANALYZE SELECT * FROM Payments WHERE payment_status = 'Failed';
+-- EXPLAIN ANALYZE SELECT * FROM Deliveries WHERE delivery_status = 'Delayed';
+
+-- You will see: Seq Scan (slow) | Cost high | Time 60-80ms
+-- Take screenshot and save as before_optimization.png
+
+-- ---------------------------------------------------------
+-- PART B: CREATE INDEXES - The Optimization
+-- These indexes fix the slow queries
+-- ---------------------------------------------------------
+
+-- 1. For Q1 (Pending orders) - Foreign key + status filter
+CREATE INDEX idx_orders_customer_id ON Orders(customer_id);
+CREATE INDEX idx_orders_status ON Orders(order_status);
+
+-- 2. For Q2 (Ankara search) - Most searched column in Shop Didi
+CREATE INDEX idx_products_fabric_type ON Products(fabric_type);
+
+-- 3. For Q3 (Custom low stock) - Composite index for 2 conditions
+CREATE INDEX idx_products_custom_stock ON Products(is_custom, stock_qty);
+
+-- 4. For Q4 (Sales per designer) - Heavy JOIN needs these
+CREATE INDEX idx_products_designer_id ON Products(designer_id);
+CREATE INDEX idx_orderitems_product_id ON Order_Items(product_id);
+CREATE INDEX idx_orderitems_order_id ON Order_Items(order_id);
+
+-- 5. For Q5 (Failed payments)
+CREATE INDEX idx_payments_order_id ON Payments(order_id);
+CREATE INDEX idx_payments_status ON Payments(payment_status);
+
+-- 6. For Q6 (Top rated) and Q8 (Category performance)
+CREATE INDEX idx_reviews_product_id ON Reviews(product_id);
+CREATE INDEX idx_products_category_id ON Products(category_id);
+
+-- 7. For Q7 (Delayed deliveries)
+CREATE INDEX idx_deliveries_order_id ON Deliveries(order_id);
+CREATE INDEX idx_deliveries_status ON Deliveries(delivery_status);
+
+-- 8. Extra: For faster designer brand lookup
+CREATE INDEX idx_designers_brand ON Designers(brand_name);
+
+-- ---------------------------------------------------------
+-- PART C: EVIDENCE OF AFTER - Run these AFTER creating indexes
+-- Copy these and run again in pgAdmin with EXPLAIN ANALYZE
+-- ---------------------------------------------------------
+-- EXPLAIN ANALYZE SELECT * FROM Products WHERE fabric_type = 'Ankara';
+-- EXPLAIN ANALYZE SELECT * FROM Orders WHERE order_status = 'Pending';
+-- EXPLAIN ANALYZE SELECT * FROM Payments WHERE payment_status = 'Failed';
+-- EXPLAIN ANALYZE SELECT * FROM Deliveries WHERE delivery_status = 'Delayed';
+
+-- You will see: Index Scan or Bitmap Index Scan (fast) | Cost low | Time 3-5ms
+-- Take screenshot and save as after_optimization.png
+
+-- To confirm indexes were created:
+-- SELECT indexname FROM pg_indexes WHERE tablename = 'products';
