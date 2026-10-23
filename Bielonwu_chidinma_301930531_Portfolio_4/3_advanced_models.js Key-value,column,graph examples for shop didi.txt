@@ -1,0 +1,15 @@
+3.KEY VALUE, COLUMN, GRAPH EXAMPLES FOR SHOP DIDI
+
+// KEY-VALUE MODEL - For Shop Didi Shopping Cart / Session (Redis style)
+Cart: "cart:CUST001" => {"PROD001": {"qty":1, "custom":true}, "PROD002": {"qty":2} }
+Session: "session:CUST001" => "last_viewed: Agbada, Kaftan"
+
+// COLUMN FAMILY MODEL - For Analytics (Cassandra style) - Shop Didi Sales Analysis
+// RowKey: Product_ID | Columns: daily sales, ratings, views
+Products_Analytics: PROD001 => { sales:2026-10-23:1, views:150, avg_rating:4.8 }
+
+// GRAPH MODEL - For Recommendations (Neo4j style)
+(CUST001)-[BOUGHT]->(PROD001)-[DESIGNED_BY]->(DES001)
+(CUST001)-[REVIEWED {rating:5}]->(PROD001)
+(CUST002)-[BOUGHT]->(PROD001) // So recommend to CUST002 what CUST001 bought
+Query: MATCH (c:Customer)-[:BOUGHT]->(p:Product)<-[:BOUGHT]-(other:Customer) RETURN other

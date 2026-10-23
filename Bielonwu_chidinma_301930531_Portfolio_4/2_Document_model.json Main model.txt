@@ -1,0 +1,35 @@
+2. MAIN MODEL
+// Shop Didi - Products collection (flexible for Agbada, Kaftan, Gowns)
+{
+"_id": "PROD001",
+"product_name": "Royal Agbada - Custom Fit",
+"category": "Agbada",
+"designer": {"designer_id": "DES001", "brand_name": "Zee Atelier"}, 
+"price": 150000,
+"fabric_type": "Aso-Oke",
+"is_custom": true,
+"stock_qty": 3,
+"measurements_allowed": ["bust", "waist", "shoulder", "length", "extra_length"],
+"reviews": [
+{"customer_id": "CUST001", "rating": 5, "comment": "Neatly tailored, premium quality"}
+]
+}
+
+// Customers - embedded measurements (this is why NoSQL is better!)
+{
+"_id": "CUST001",
+"full_name": "Chidinma B",
+"email": "c.bielonwu0531@miva.edu.ng",
+"measurements": {"bust": "34", "waist": "28", "hips": "40", "height": "5.8ft"},
+"address": "Lagos"
+}
+
+// Orders - embedded items, payment, delivery - NO JOINS NEEDED
+{
+"_id": "ORD001",
+"customer_id": "CUST001",
+"order_date": "2026-10-23",
+"items": [{"product_id": "PROD001", "quantity": 1, "custom_measurements": {"waist": "28", "length": "62"}}],
+"payment": {"method": "Bank Transfer", "status": "Paid"},
+"delivery": {"address": "Lekki, Lagos", "status": "In Transit"}
+}

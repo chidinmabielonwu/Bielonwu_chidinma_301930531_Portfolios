@@ -1,0 +1,21 @@
+5.SUITABILITY
+
+## Suitability for Shop Didi
+
+1. DOCUMENT MODEL (MongoDB) - BEST FIT:
+- Reason: Shop Didi deals with custom measurements. Each customer has different measurements (bust, waist, extra_length). In SQL this would need many nullable columns or extra tables. In NoSQL we embed measurements as flexible JSON.
+- Example: is_custom=true products need custom_measurements field only when needed.
+- Reviews embedded in products = faster product page load, no JOIN.
+
+2. KEY-VALUE - Good for Cart & Sessions:
+- Fast lookup for cart: customer_id -> cart items. Expires easily.
+
+3. COLUMN FAMILY - Good for Analytics:
+- Shop Didi needs to analyze sales by fabric_type, category, designer performance over time.
+
+4. GRAPH - Good for Recommendations:
+- "Customers who bought this Agbada also bought this Kaftan" and "Designers similar to Zee Atelier".
+
+CONCLUSION: Shop Didi is hybrid. Core catalogue + orders = Document model. Cart = Key-Value. Recommendation = Graph.
+
+Implementation Evidence: MongoDB Compass screenshots + queries tested.

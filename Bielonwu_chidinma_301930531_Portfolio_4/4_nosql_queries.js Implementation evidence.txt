@@ -1,0 +1,15 @@
+4. IMPLEMENTATION
+
+// MongoDB implementation
+db.products.insertOne({...})
+db.products.find({is_custom: true, category: "Agbada"})
+db.orders.find({"items.custom_measurements": {$exists: true}})
+db.products.createIndex({fabric_type: 1})
+
+// Key-Value
+SET cart:CUST001 '{"PROD001":1}'
+
+// Graph
+MATCH (c:Customer {id:"CUST001"})-[:BOUGHT]->(p)<-[:BOUGHT]-(friend) RETURN friend
+
+
