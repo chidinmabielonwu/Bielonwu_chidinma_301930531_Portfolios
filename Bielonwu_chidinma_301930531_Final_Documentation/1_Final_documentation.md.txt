@@ -1,0 +1,57 @@
+*File 1: `1_Final_Documentation.md`*
+
+# FINAL DOCUMENTATION - Advanced Database MIT 8103
+Student: Bielonwu Chidinma | Matric: 301930531
+Selected Organization: Shop Didi - Nigerian Fashion E-commerce
+GitHub: https://github.com/chidinmabielonwu/Bielonwu_chidinma_301930531_Portfolios
+
+## 1. Organization Summary
+Shop Didi sells Owambe, Aso-oke, Agbada to Lagos, Abuja, UK/US diaspora.
+Users: Customers (custom measurements), Admin, Delivery riders
+Data: Products (fabric, sizes, custom measurements), Customers, Orders, Payments, Delivery tracking
+Need: Handle Dec festive peak, 24/7 availability, no order loss.
+
+## 2. Portfolio Summary (1-5) - 2 Page Summary
+
+Portfolio 1 - Data Models & Case Study:
+Defined Shop Didi case study consistent across all. Entity Relationship for relational, document model for NoSQL. Identified operations: Add product, place order with custom measurements, update stock, track delivery.
+
+Portfolio 2 - Relational Implementation (SQL):
+Implemented MySQL ShopDidiDB. Tables: Products, Customers, Orders, Order_Items, Payments, Delivery.
+Normalization 3NF. Queries: JOIN customer orders, GROUP BY top products, transaction for stock decrement.
+Evidence: MySQL Workbench screenshots, 3 product inserts.
+
+Portfolio 3 - Transaction & Security:
+ACID transaction: BEGIN; UPDATE Products stock; INSERT Orders; COMMIT; ROLLBACK on fail prevents overselling.
+Security: Roles - customer_read, admin_full, rider_delivery_only. GRANT SELECT, UPDATE. Row-level for customers see own orders only.
+
+Portfolio 4 - NoSQL Implementation:
+MongoDB Atlas Cloud M0 AWS eu-west-1. Database ShopDidiDB Collections: Products, customers, Orders.
+Document model flexible for custom measurements {bust, waist, hips} varying per product.
+Evidence: Atlas screenshots Products/customers/Orders 1 document each. Connection string proof.
+
+Portfolio 5 - Distributed & Cloud Database:
+This portfolio - Shop Didi deployed on distributed cloud DB.
+Replication: Atlas Cluster0 is Replica Set 3 nodes across 3 AZs, automatic failover <10s, 99.995% SLA.
+Sharding: Design for 1M orders. Shard key customers: customer_id hashed, orders: customer_id+order_date ensures locality (my orders fast, no scatter-gather). sh.shardCollection().
+Availability: Multi-AZ, backups, retryWrites=true, monitoring.
+Consistency: Tunable - majority for Orders/Payments (CP), eventual for catalog (AP) using writeConcern majority, readConcern majority, readPreference primary vs secondaryPreferred. Transactions multi-document.
+Deployment Evidence: Atlas screenshots reused from Portfolio 4 - proves cloud deployment (DBaaS). Cluster overview shows AWS, region, replica set.
+Cloud benefit vs on-premise: No NEPA issue, pay-as-grow Free->M10 $57, global diaspora low latency, managed security.
+
+## 3. Screenshots/Evidence Index
+All evidence in GitHub folders:
+- Portfolio 2: /Portfolio_2/screenshots SQL tables
+- Portfolio 3: /Portfolio_3 transaction logs
+- Portfolio 4: /Portfolio_4/screenshots Atlas 3 collections
+- Portfolio 5: /Portfolio_5/screenshots same 3 collections as cloud proof + config JS files
+- Total GitHub Commits: 7+
+
+## 4. Deployment Architecture
+Frontend Vercel -> Backend Render -> MongoDB Atlas AWS eu-west-1 Replica Set 3 nodes -> Backups S3 -> Future shards US/EU for diaspora.
+This satisfies distributed & cloud discussion: replication, sharding, availability, consistency, deployment evidence.
+
+## 5. Conclusion
+From single MySQL to distributed Atlas cloud - Shop Didi now scalable for Dec Owambe peak, available 24/7, durable. Matric 301930531 included in all folders/files/commits.
+
+

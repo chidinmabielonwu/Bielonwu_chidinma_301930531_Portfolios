@@ -1,0 +1,29 @@
+*File 2: `2_Reflection_and_AI_Declaration.md`*
+
+# Individual Reflection & AI-Use Declaration
+Bielonwu Chidinma - 301930531
+
+## Reflection
+Challenge: Understanding shard key choice - learned customer_id hashed best to avoid hotspots vs region causes uneven.
+Hardest: Replication failover concept - thought secondary copies data only but also becomes primary automatically.
+Lesson: Distributed is not just many servers but managed replication, tunable consistency matters money needs strong, catalog can be eventual.
+Shop Didi realistic because custom measurements need NoSQL flexibility.
+Future: Would add Global Clusters for UK/US diaspora read replicas, enable Atlas Search for Ankara search.
+
+## AI-Use Declaration
+I used Meta AI for:
+- Structuring portfolio folders to meet brief requirements
+- Explaining replication/sharding concepts in simple terms
+- Formatting markdown and JS config templates
+
+All understanding, case study choice Shop Didi, matric number inclusion,All GitHub commites and pushes, screenshots from my Atlas Cluster0 done by me.
+No AI generated screenshots. All Atlas cluster screenshots are my own account Cluster0 eu-west-1 ShopDidiDB , Fixed file extension errors (.txt to.md/.js)when i noticed on GitHub desktop.
+I take responsibility for content.
+
+## References
+- MongoDB Docs: Replication https://docs.mongodb.com/manual/replication/
+- MongoDB Docs: Sharding https://docs.mongodb.com/manual/sharding/
+- MongoDB Atlas Docs https://docs.atlas.mongodb.com/
+- CAP Theorem - Brewer 2000
+- Course slides MIT 8103 Advanced Database
+

@@ -1,0 +1,16 @@
+*File 3: `3_GitHub_Link.txt`*
+
+GitHub Repository Link:
+https://github.com/chidinmabielonwu/Bielonwu_chidinma_301930531_Portfolios
+
+Folders:
+- Bielonwu_Chidinma_301930531_Portfolio_1
+- Bielonwu_Chidinma_301930531_Portfolio_2
+- Bielonwu_Chidinma_301930531_Portfolio_3
+- Bielonwu_Chidinma_301930531_Portfolio_4
+- Bielonwu_Chidinma_301930531_Portfolio_5 (Distributed & Cloud - 6 files + 3 screenshots)
+- Bielonwu_Chidinma_301930531_Final_Documentation (This folder)
+- README.md
+
+Student: Bielonwu Chidinma - 301930531
+All portfolios include matric number in filenames, folder names, commit messages as required.
